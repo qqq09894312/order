@@ -1,0 +1,69 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>下單資料</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f5f7;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",Arial,sans-serif}.wrap{max-width:520px;margin:auto;padding:18px 14px}.card{background:white;border-radius:20px;padding:22px;box-shadow:0 5px 25px #0001}h1{text-align:center;margin:0 0 5px}.desc{text-align:center;color:#777;margin-bottom:20px}.langs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.langs button,.ship span{border:1px solid #ddd;background:white;border-radius:10px;padding:10px 2px}.langs .active{background:#222;color:white}label.t{display:block;font-weight:700;margin:17px 0 7px}.r{color:#d33}input,select{width:100%;height:47px;border:1px solid #ddd;border-radius:11px;padding:0 12px;font-size:16px}.contact{display:grid;grid-template-columns:125px 1fr;gap:7px}.ship{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.ship input{display:none}.ship span{display:block;text-align:center}.ship input:checked+span{background:#222;color:white}.hide{display:none}button.action{width:100%;min-height:54px;margin-top:22px;border:0;border-radius:14px;font-size:17px;font-weight:800;color:white;box-shadow:0 5px 12px #0002;cursor:pointer}
+button.line{background:#06c755;display:flex;align-items:center;justify-content:center;gap:10px}
+button.line:active{transform:scale(.99)}
+.line-icon{font-size:12px;background:#fff2;color:white;border:1px solid #fff6;border-radius:7px;padding:3px 6px;font-weight:800}
+.note{text-align:center;color:#777;font-size:13px;line-height:1.5;margin-top:10px}
+#shippingHint{margin-top:8px;padding:8px 10px;border-radius:9px;background:#f7f7f7}
+input:focus,select:focus{outline:2px solid #06c75544;border-color:#06c755}
+.langs button{min-height:46px;font-size:14px;font-weight:600;cursor:pointer}
+@media(max-width:390px){.card{padding:18px}.langs{gap:5px}.langs button{font-size:13px}.contact{grid-template-columns:110px 1fr}}
+</style></head><body><div class="wrap"><div class="card"><h1 id="title"></h1><div class="desc" id="desc"></div>
+<div class="langs"><button data-l="zh">中文</button><button data-l="id">Indonesia</button><button data-l="vi">Tiếng Việt</button><button data-l="en">English</button></div>
+<form id="f"><div class="note" id="requiredHint" style="margin:12px 0 2px;text-align:left"></div><label class="t" id="bl">買家名稱 <i class="r">*</i></label><input id="buyer" required><label class="t" id="pl">電話號碼 <i class="r">*</i></label><input id="phone" required type="tel">
+<label class="t" id="cl">聯繫方式 <i class="r">*</i></label><div class="contact"><select id="ct"><option>WhatsApp</option><option>TikTok</option></select><input id="cv" required></div>
+<label class="t" id="sl">運送方式 <i class="r">*</i></label>
+<select id="shippingSelect" required>
+<option value="">請選擇配送方式</option>
+<option value="711">7-11</option>
+<option value="family">Family Mart</option>
+<option value="post">郵局</option>
+</select>
+<div id="shippingHint" class="note"></div>
+<div id="store" class="hide"><label class="t" id="sil">店號 <i class="r">*</i></label><input id="si"><label class="t" id="snl">門市名稱 <i class="r">*</i></label><input id="sn"></div>
+<div id="addr"><label class="t" id="al">收件地址 <i class="r">*</i></label><input id="a"></div>
+<button class="action line" id="line" type="button"><span class="line-icon">LINE</span><span id="lineText"></span></button><div class="note" id="note"></div></form></div></div>
+<script>
+const T={
+zh:{title:"下單資料",desc:"請填寫資料後送出訂單",chooseShip:"請選擇配送方式",requiredHint:"* 必填",storeNo:"店號",sip711:"請輸入 7-11 店號",sipFamily:"請輸入 Family Mart 店號",h711:"請填寫 7-11 店號與門市名稱",hFamily:"請填寫 Family Mart 店號與門市名稱",hPost:"請填寫郵局收件地址",b:"買家名稱",bp:"請輸入買家名稱",p:"電話號碼",pp:"請輸入電話號碼",c:"聯繫方式",cp:"請輸入 WhatsApp 或 TikTok 名稱",s:"運送方式",post:"郵局宅配",fam:"Family Mart",si:"店號",sip:"請輸入 7-11／全家店號",sn:"門市名稱",snp:"請輸入門市名稱",a:"收件地址",ap:"請輸入郵寄地址",ok:"確認資料",line:"傳送訂單到 LINE"},
+id:{title:"Formulir Pemesanan",desc:"Isi data lalu kirim pesanan",chooseShip:"Pilih metode pengiriman",requiredHint:"* Wajib diisi",storeNo:"Nomor toko",sip711:"Masukkan nomor toko 7-11",sipFamily:"Masukkan nomor toko Family Mart",h711:"Silakan isi nomor toko 7-11 dan nama toko",hFamily:"Silakan isi nomor toko Family Mart dan nama toko",hPost:"Silakan isi alamat penerima untuk kantor pos",b:"Nama Pembeli",bp:"Masukkan nama pembeli",p:"Nomor Telepon",pp:"Masukkan nomor telepon",c:"Kontak",cp:"Masukkan nama WhatsApp atau TikTok",s:"Metode Pengiriman",post:"Pengiriman Pos",fam:"Family Mart",si:"Nomor Toko",sip:"Masukkan nomor toko 7-11 / FamilyMart",sn:"Nama Toko",snp:"Masukkan nama toko",a:"Alamat Pengiriman",ap:"Masukkan alamat pengiriman",ok:"Konfirmasi Data",line:"Kirim Pesanan ke LINE"},
+vi:{title:"Thông Tin Đặt Hàng",desc:"Điền thông tin rồi gửi đơn hàng",chooseShip:"Chọn phương thức giao hàng",requiredHint:"* Bắt buộc",storeNo:"Mã cửa hàng",sip711:"Nhập mã cửa hàng 7-11",sipFamily:"Nhập mã cửa hàng Family Mart",h711:"Vui lòng nhập mã cửa hàng 7-11 và tên cửa hàng",hFamily:"Vui lòng nhập mã cửa hàng Family Mart và tên cửa hàng",hPost:"Vui lòng nhập địa chỉ nhận hàng qua bưu điện",b:"Tên Người Mua",bp:"Nhập tên người mua",p:"Số Điện Thoại",pp:"Nhập số điện thoại",c:"Phương Thức Liên Hệ",cp:"Nhập tên WhatsApp hoặc TikTok",s:"Phương Thức Giao Hàng",post:"Giao Hàng Bưu Điện",fam:"Family Mart",si:"Mã Cửa Hàng",sip:"Nhập mã cửa hàng 7-11 / FamilyMart",sn:"Tên Cửa Hàng",snp:"Nhập tên cửa hàng",a:"Địa Chỉ Nhận Hàng",ap:"Nhập địa chỉ giao hàng",ok:"Xác Nhận",line:"Gửi Đơn Hàng qua LINE"},
+en:{title:"Order Information",desc:"Fill in the details and send your order",chooseShip:"Select shipping method",requiredHint:"* Required",storeNo:"Store number",sip711:"Enter 7-11 store number",sipFamily:"Enter Family Mart store number",h711:"Enter the 7-11 store number and store name",hFamily:"Enter the Family Mart store number and store name",hPost:"Enter the postal delivery address",b:"Buyer Name",bp:"Enter buyer name",p:"Phone Number",pp:"Enter phone number",c:"Contact Method",cp:"Enter WhatsApp or TikTok name",s:"Shipping Method",post:"Postal Delivery",fam:"Family Mart",si:"Store Number",sip:"Enter 7-11 / FamilyMart store number",sn:"Store Name",snp:"Enter store name",a:"Delivery Address",ap:"Enter delivery address",ok:"Confirm",line:"Send Order to LINE"}};
+let L="zh",$=x=>document.getElementById(x), req=(x,t)=>$(x).innerHTML=t+' <i class="r">*</i>';
+function lang(l){L=l;let t=T[l];$("title").textContent=t.title;$("desc").textContent=t.desc;$("requiredHint").textContent=t.requiredHint;req("bl",t.b);$("buyer").placeholder=t.bp;req("pl",t.p);$("phone").placeholder=t.pp;req("cl",t.c);$("cv").placeholder=t.cp;req("sl",t.s);$("post").textContent=t.post;$("fam").textContent=t.fam;req("sil",t.si);$("si").placeholder=t.sip;req("snl",t.sn);$("sn").placeholder=t.snp;req("al",t.a);$("a").placeholder=t.ap;$("lineText").textContent=t.line;
+$("shippingSelect").options[0].textContent=t.chooseShip;
+$("shippingHint").textContent="";shipping();document.querySelectorAll(".langs button").forEach(x=>x.classList.toggle("active",x.dataset.l==l))}
+function shipping(){
+let v=$("shippingSelect").value;
+let isStore=v==="711"||v==="family";
+let isPost=v==="post";
+$("store").classList.toggle("hide",!isStore);
+$("addr").classList.toggle("hide",!isPost);
+
+$("si").required=isStore;
+$("sn").required=isStore;
+$("a").required=isPost;
+
+let t=T[L];
+$("sil").textContent=isStore ? t.storeNo : t.si;
+$("si").placeholder=isStore ? (v==="711" ? t.sip711 : t.sipFamily) : "";
+$("snl").textContent=t.sn;
+$("sn").placeholder=t.snp;
+$("al").textContent=t.a;
+$("a").placeholder=t.ap;
+
+$("shippingHint").textContent=
+  v==="711" ? t.h711 :
+  v==="family" ? t.hFamily :
+  v==="post" ? t.hPost : "";
+}
+function text(){
+let v=$("shippingSelect").value,t=T[L],s=v==="post"?t.post:v==="711"?"7-11":t.fam;
+let r=["【"+t.title+"】",t.b+"："+$("buyer").value,t.p+"："+$("phone").value,t.c+"："+$("ct").value+" / "+$("cv").value,t.s+"："+s];
+if(v==="post") r.push(t.a+"："+$("a").value);
+else {r.push(t.si+"："+$("si").value);r.push(t.sn+"："+$("sn").value);}
+return r.join("\\n")
+}
+document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>lang(b.dataset.l));$("shippingSelect").onchange=shipping;$("f").onsubmit=e=>e.preventDefault();$("line").onclick=()=>{if(!$("f").reportValidity())return;location.href="https://line.me/R/oaMessage/%40534idevh/?"+encodeURIComponent(text())};lang("zh");shipping();
+</script></body></html>
